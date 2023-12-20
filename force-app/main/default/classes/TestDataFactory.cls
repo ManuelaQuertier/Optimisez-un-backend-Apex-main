@@ -7,18 +7,34 @@ public class TestDataFactory {
         insert a;
         return a.Id;
     }
-    public static Order createOrders(Id accountId) {
+
+    public static String createContract(Id accountId){
+
+        Contract c = new Contract(
+            AccountId = accountId,
+            StartDate = Date.today(),
+            ContractTerm = Integer.valueof((Math.random() * 9 + 3))
+            );
+            insert c;
+            return c.Id;
+    }
+    public static Order createOrders(Id accountId, Id contractId) {
         
-        Order o = new Order(Name='TestOrder',
-							AccountId = accountId,
-                           Status = 'Draft',
-							EffectiveDate = Date.today());
+        Order o = new Order(
+            Name='TestOrder',
+            AccountId = accountId,
+            Status = 'Draft',
+            EffectiveDate = Date.today(),
+            ContractId = contractId
+            );
 		insert o;
         return o;
     }
+
     
     public static void createData(){
         Id accountId = TestDataFactory.createAccount();
-        Order myOrder = TestDataFactory.createOrders(accountId);
+        Id contractId = TestDataFactory.createContract(accountId);
+        Order myOrder = TestDataFactory.createOrders(accountId, contractId);
     }
 }
