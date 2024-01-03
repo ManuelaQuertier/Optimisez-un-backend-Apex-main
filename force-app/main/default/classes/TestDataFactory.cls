@@ -26,6 +26,7 @@ public class TestDataFactory {
             Status = 'Draft',
             EffectiveDate = Date.today(),
             ContractId = contractId
+            ShipmentCost__c = Integer.valueof((Math.random() * 20 + 130))
             );
 		insert o;
         return o;
