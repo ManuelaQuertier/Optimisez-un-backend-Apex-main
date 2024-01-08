@@ -18,24 +18,28 @@ public class TestDataFactory {
             insert c;
             return c.Id;
     }
-    public static Order createOrders(Id accountId, Id contractId) {
+    public static void createOrders(Id accountId, Id contractId, Integer nbreOfRecords) {
         
-        Order o = new Order(
-            Name='TestOrder',
-            AccountId = accountId,
-            Status = 'Draft',
-            EffectiveDate = Date.today(),
-            ContractId = contractId
-            ShipmentCost__c = Integer.valueof((Math.random() * 20 + 130))
-            );
-		insert o;
-        return o;
+        List<Order> ordersToInsert = new List<Order>();
+        for(integer i= 0 ; i< nbreOfRecords; i++){
+            Order o = new Order(
+                Name='TestOrder' + i,
+                AccountId = accountId,
+                Status = 'Draft',
+                EffectiveDate = Date.today(),
+                ContractId = contractId,
+                ShipmentCost__c = Integer.valueof((Math.random() * 20 + 130))
+                );
+                ordersToInsert.add(o);
+        }
+		insert ordersToInsert;
     }
 
     
     public static void createData(){
+        Integer nbreOfRecords;
         Id accountId = TestDataFactory.createAccount();
         Id contractId = TestDataFactory.createContract(accountId);
-        Order myOrder = TestDataFactory.createOrders(accountId, contractId);
+        TestDataFactory.createOrders(accountId, contractId, nbreOfRecords);
     }
 }
