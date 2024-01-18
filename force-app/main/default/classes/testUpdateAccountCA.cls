@@ -17,6 +17,8 @@ private class testUpdateAccountCA {
     @isTest testUpdateAccountCANotOrderedStatus() {
 
         //insert new orderItem
+        //change the order status to completed
+        //update order
         //get Account CA 
         //assert that Account CA doesn't change
 
