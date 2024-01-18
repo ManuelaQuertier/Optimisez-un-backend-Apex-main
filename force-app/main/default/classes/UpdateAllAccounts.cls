@@ -1,17 +1,9 @@
-global class UpdateAllAccounts implements Database.Batchable<sObject>{
+global class UpdateAllAccounts implements schedulable {
     
-   global Database.QueryLocator start(Database.BatchableContext info){ 
-       //Requeter seulement les comptes qui ont au moins une commande avec le Status 'Ordered'
-       return Database.getQueryLocator('SELECT Id FROM Account');
-
-   }
     
-   global void execute(Database.BatchableContext info, List<Account> scope){
-       Set<Id> setAccountIds = (new Map<Id,SObject>(scope)).keySet();
-       // AP01Account.updateChiffreAffaire(setAccountIds);
+   global void execute(schedulableContext context){
+    UpdateAccounts batch = new UpdateAccounts();
+    Database.executebatch(batch);
    }    
-    
-   global void finish(Database.BatchableContext info){     
-       
-   } 
+
 }
