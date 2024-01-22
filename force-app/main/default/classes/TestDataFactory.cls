@@ -3,7 +3,7 @@ public class TestDataFactory {
     
     public static String createAccount() {
         
-		Account myAccount = new Account(Name='TestAccount');
+		Account myAccount = new Account(Name='TestAccount2');
         insert myAccount;
         return myAccount.Id;
     }
@@ -26,8 +26,9 @@ public class TestDataFactory {
         return myProduct.Id;
     }
 
-    public static String createPriceBookEntry(Id productId){
+    public static String createPriceBookEntry(){
 
+        Id productId = createProduct();
         PricebookEntry myPriceBookEntry = new PricebookEntry(
             Pricebook2Id = Test.getStandardPricebookId(),
             Product2Id = productId,
@@ -49,7 +50,7 @@ public class TestDataFactory {
                 EffectiveDate = Date.today(),
                 Pricebook2Id = Test.getStandardPricebookId(),
                 ContractId = contractId,
-                ShipmentCost__c = Integer.valueof((Math.random() * 20 + 130))
+                ShipmentCost__c = Integer.valueof((Math.random() * 10 + 50))
                 );
                 ordersToInsert.add(o);
         }
@@ -60,27 +61,35 @@ public class TestDataFactory {
     public static void createOrderItem(List<Order> orders, Id pricebookEntryId) {
         List<OrderItem> orderItems = new List<OrderItem>();
         for(Order O : orders){
-            OrderItem oi1 = new OrderItem (
+            OrderItem myOrderItem = new OrderItem (
                 OrderId = O.Id,
                 PricebookEntryId = pricebookEntryId,
-                Quantity=10,
+                Quantity= Math.random()*10,
                 UnitPrice = 150);
-            orderItems.add(oi1);    
+            orderItems.add(myOrderItem);    
         }
         insert orderItems;
     }
 
+
+
+    
     public static void createOrderWithItems(Id accountId, Id contractId, Integer nbreOfRecords, Id pricebookEntryId){
         
-        List<Order> OrdersforItem = createOrders(accountId, contractId, nbreOfRecords);
-        createOrderItem(OrdersforItem, pricebookEntryId);
+        
+        
     }
 
-    public static void createData(){
-        Integer nbreOfRecords;
-        Id accountId = TestDataFactory.createAccount();
-        Id contractId = TestDataFactory.createContract(accountId);
-        TestDataFactory.createOrders(accountId, contractId, nbreOfRecords);
+    public static void createData(Integer nbreOfOrders){
+
+        Integer nbreOfRecords = nbreOfOrders;
+
+        Id pricebookEntryId = createPriceBookEntry();
+        Id accountId = createAccount();
+        Id contractId = createContract(accountId);
+        List<Order> OrdersforItem = createOrders(accountId, contractId, nbreOfRecords);
+        createOrderItem(OrdersforItem, pricebookEntryId);
+        
     }
 
 }
