@@ -1,14 +1,14 @@
-@isTest
+//@isTest
 public class TestDataFactory {
     
-    public static String createAccount() {
+    public static Id createAccount() {
         
-		Account myAccount = new Account(Name='TestAccount2');
+		Account myAccount = new Account(Name='TestAccount7');
         insert myAccount;
         return myAccount.Id;
     }
 
-    public static String createContract(Id accountId){
+    public static Id createContract(Id accountId){
 
         Contract myContract = new Contract(
             AccountId = accountId,
@@ -16,10 +16,10 @@ public class TestDataFactory {
             ContractTerm = Integer.valueof((Math.random() * 9 + 3))
             );
             insert myContract;
-            return myContract.Id;
+			return myContract.Id;
     }
 
-    public static String createProduct(){
+    public static Id createProduct(){
 
         Product2 myProduct = new Product2(Name = 'Chemise Verte longue XYX', Family = 'Chemise');
         Insert myProduct;
@@ -29,8 +29,9 @@ public class TestDataFactory {
     public static String createPriceBookEntry(){
 
         Id productId = createProduct();
+       // Pricebook2 standardPB = [select id from Pricebook2 where isStandard=true];
         PricebookEntry myPriceBookEntry = new PricebookEntry(
-            Pricebook2Id = Test.getStandardPricebookId(),
+            Pricebook2Id = Test.getStandardPricebookId(),//standardPB.id, 
             Product2Id = productId,
             UnitPrice = 1020,
             IsActive = true
@@ -42,15 +43,16 @@ public class TestDataFactory {
     public static List<Order> createOrders(Id accountId, Id contractId, Integer nbreOfRecords) {
 
         List<Order> ordersToInsert = new List<Order>();
+        //Pricebook2 standardPB = [select id from Pricebook2 where isStandard=true];
         for(integer i= 0 ; i< nbreOfRecords; i++){
             Order o = new Order(
                 Name='TestOrder' + i,
                 AccountId = accountId,
                 Status = 'Draft',
                 EffectiveDate = Date.today(),
-                Pricebook2Id = Test.getStandardPricebookId(),
+                Pricebook2Id = Test.getStandardPricebookId(),//standardPB.id,
                 ContractId = contractId,
-                ShipmentCost__c = Integer.valueof((Math.random() * 10 + 50))
+                ShipmentCost__c = Integer.valueof(Math.random() * 10 + 50)
                 );
                 ordersToInsert.add(o);
         }
@@ -58,38 +60,29 @@ public class TestDataFactory {
         return ordersToInsert;
     }
 
-    public static void createOrderItem(List<Order> orders, Id pricebookEntryId) {
+    public static List<order> createOrderItem(List<Order> orders, Id pricebookEntryId) {
         List<OrderItem> orderItems = new List<OrderItem>();
         for(Order O : orders){
             OrderItem myOrderItem = new OrderItem (
                 OrderId = O.Id,
                 PricebookEntryId = pricebookEntryId,
-                Quantity= Math.random()*10,
+                Quantity= Integer.valueof(Math.random()*10),
                 UnitPrice = 150);
             orderItems.add(myOrderItem);    
         }
         insert orderItems;
+        return orders;
     }
 
 
-
-    
-    public static void createOrderWithItems(Id accountId, Id contractId, Integer nbreOfRecords, Id pricebookEntryId){
-        
-        
-        
-    }
-
-    public static void createData(Integer nbreOfOrders){
+    public static List<order> createOrderWithItems(Id accountId, Integer nbreOfOrders){
 
         Integer nbreOfRecords = nbreOfOrders;
-
+		Contract contract = [SELECT Id From Contract WHERE AccountId = :accountId];
         Id pricebookEntryId = createPriceBookEntry();
-        Id accountId = createAccount();
-        Id contractId = createContract(accountId);
-        List<Order> OrdersforItem = createOrders(accountId, contractId, nbreOfRecords);
-        createOrderItem(OrdersforItem, pricebookEntryId);
-        
+        List<Order> OrdersforOrderItem = createOrders(accountId, contract.Id, nbreOfRecords);
+        createOrderItem(OrdersforOrderItem, pricebookEntryId);
+        return OrdersforOrderItem;
     }
 
 }
