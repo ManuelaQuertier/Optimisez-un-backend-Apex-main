@@ -1,9 +1,10 @@
 @isTest
-public class testUpdateAccountCA {
+public class testUpdateAccountTurnover {
 
     @testSetup 
-        static void testDatas(){
-
+    static void testDatas(){
+        
+        User myUser = TestDataFactory.createUser();
         Id accountId = TestDataFactory.createAccount();
         
         Id contractId = TestDataFactory.createContract(accountId);
