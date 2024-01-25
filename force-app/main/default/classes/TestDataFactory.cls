@@ -15,8 +15,8 @@ public class TestDataFactory {
             StartDate = Date.today(),
             ContractTerm = Integer.valueof((Math.random() * 9 + 3))
             );
-            insert myContract;
-			return myContract.Id;
+        insert myContract;
+		return myContract.Id;
     }
 
     public static Id createProduct(){
@@ -29,13 +29,13 @@ public class TestDataFactory {
     public static String createPriceBookEntry(){
 
         Id productId = createProduct();
-       // Pricebook2 standardPB = [select id from Pricebook2 where isStandard=true];
+       
         PricebookEntry myPriceBookEntry = new PricebookEntry(
-            Pricebook2Id = Test.getStandardPricebookId(),//standardPB.id, 
+            Pricebook2Id = Test.getStandardPricebookId(),
             Product2Id = productId,
             UnitPrice = 1020,
             IsActive = true
-        );
+            );
         Insert myPriceBookEntry;
         return myPriceBookEntry.Id;
     }
@@ -43,31 +43,34 @@ public class TestDataFactory {
     public static List<Order> createOrders(Id accountId, Id contractId, Integer nbreOfRecords) {
 
         List<Order> ordersToInsert = new List<Order>();
-        //Pricebook2 standardPB = [select id from Pricebook2 where isStandard=true];
+       
         for(integer i= 0 ; i< nbreOfRecords; i++){
             Order o = new Order(
                 Name='TestOrder' + i,
                 AccountId = accountId,
                 Status = 'Draft',
                 EffectiveDate = Date.today(),
-                Pricebook2Id = Test.getStandardPricebookId(),//standardPB.id,
+                Pricebook2Id = Test.getStandardPricebookId(),
                 ContractId = contractId,
                 ShipmentCost__c = Integer.valueof(Math.random() * 10 + 50)
                 );
-                ordersToInsert.add(o);
+            ordersToInsert.add(o);
         }
+
 		insert ordersToInsert;
         return ordersToInsert;
     }
 
     public static List<order> createOrderItem(List<Order> orders, Id pricebookEntryId) {
+
         List<OrderItem> orderItems = new List<OrderItem>();
         for(Order O : orders){
             OrderItem myOrderItem = new OrderItem (
                 OrderId = O.Id,
                 PricebookEntryId = pricebookEntryId,
                 Quantity= Integer.valueof(Math.random()*10),
-                UnitPrice = 150);
+                UnitPrice = 150
+                );
             orderItems.add(myOrderItem);    
         }
         insert orderItems;
