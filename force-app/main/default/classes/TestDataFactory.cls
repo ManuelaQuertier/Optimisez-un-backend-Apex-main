@@ -1,4 +1,4 @@
-//@isTest
+@isTest
 public class TestDataFactory {
     
     public static Id createAccount() {
