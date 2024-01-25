@@ -1,4 +1,4 @@
-trigger UpdateAccountCA on Order (after update) {
+trigger UpdateAccountTurnover on Order (after update) {
 	
     set<Id> setAccountIds = new set<Id>();
     List<Account> accToUpdate = new List<Account>();
