@@ -68,7 +68,7 @@ public class TestDataFactory {
             OrderItem myOrderItem = new OrderItem (
                 OrderId = O.Id,
                 PricebookEntryId = pricebookEntryId,
-                Quantity= Integer.valueof(Math.random()*10),
+                Quantity= Integer.valueof(Math.random()*10 + 1),
                 UnitPrice = 150
                 );
             orderItems.add(myOrderItem);    

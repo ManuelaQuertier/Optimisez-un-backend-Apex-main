@@ -1,38 +1,61 @@
 @isTest
 public class testUpdateAccountCA {
 
-   @isTest
-	static void testUpdateAccountTurnoverOrderedStatus(){
-		        
+    @testSetup 
+        static void testDatas(){
+
         Id accountId = TestDataFactory.createAccount();
-        Account newAccount = [SELECT Id,Chiffre_d_affaire__c FROM Account WHERE Id = :accountId];
-        Decimal accountTurnover = newAccount.Chiffre_d_affaire__c;
-        //System.debug(accountTurnover);
         
         Id contractId = TestDataFactory.createContract(accountId);
-        Contract newContract = [SELECT Id, status FROM Contract WHERE Id = :contractId];
+        Contract newContract = [SELECT Id, status FROM Contract];
         newContract.status= 'Activated';
         update newContract;
         
+		TestDataFactory.createOrderWithItems(accountId, 1);
+    }
 
-		List<Order> orders = TestDataFactory.createOrderWithItems(newAccount.Id, 1);
+   @isTest
+	static void testUpdateAccountTurnoverOrderedStatus(){
+		        
+        Decimal accountTurnover = [SELECT Id,Chiffre_d_affaire__c FROM Account].Chiffre_d_affaire__c;
+        Order myNewOrder = [SELECT Id,totalAmount from Order LIMIT 1];
+       	Decimal mytotalAmount = myNewOrder.totalAmount;
 
         Test.startTest();
         
-            Order myNewOrder = [SELECT Id,totalAmount from order Where Id = :orders[0].Id];
             myNewOrder.Status = 'Ordered';
 		    update myNewOrder;
 
-       	    Decimal mytotalAmount = myNewOrder.totalAmount;
             //System.debug('total amount:' + mytotalAmount);
         
-            Account accountUpdated =  [SELECT Id,Chiffre_d_affaire__c FROM Account WHERE Id = :accountId];
-            Decimal newAccountTurnover = accountUpdated.Chiffre_d_affaire__c;
-            
         Test.stopTest();
 
-        System.assertEquals(newAccountTurnover, accountTurnover + myTotalAmount);
+        Decimal newAccountTurnover =  [SELECT Id,Chiffre_d_affaire__c FROM Account ].Chiffre_d_affaire__c;
+
+        System.assertEquals(newAccountTurnover, accountTurnover + myTotalAmount,'pas bien');
         //System.debug(newAccountTurnover + ' , ' + ( accountTurnover + myTotalAmount));
+
+    }
+
+    @isTest
+    static void testUpdateAccountTurnoverOtherStatus(){
+
+        Decimal accountTurnover = [SELECT Id,Chiffre_d_affaire__c FROM Account].Chiffre_d_affaire__c;
+        Order myNewOrder = [SELECT Id,totalAmount from order LIMIT 1];
+
+        Test.startTest();
+         
+            myNewOrder.Status = 'Activated';
+		    update myNewOrder;
+            //System.debug('total amount:' + mytotalAmount);
+         
+        Test.stopTest();
+
+        Decimal newAccountTurnover =  [SELECT Id,Chiffre_d_affaire__c FROM Account].Chiffre_d_affaire__c;
+
+
+        System.assertEquals(newAccountTurnover, accountTurnover);
+        //System.debug(newAccountTurnover + ' , ' + accountTurnover);
 
     }
 }
