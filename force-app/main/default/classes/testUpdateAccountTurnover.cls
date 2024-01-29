@@ -18,10 +18,10 @@ public class testUpdateAccountTurnover {
 	static void testUpdateAccountTurnoverOrderedStatus(){
 		        
         Decimal accountTurnover = [SELECT Id,Chiffre_d_affaire__c FROM Account].Chiffre_d_affaire__c;
-		//System.debug('oldCA :' + accountTurnover);
+		System.debug('oldCA :' + accountTurnover);
         Order myNewOrder = [SELECT Id,totalAmount from Order LIMIT 1];
        	Decimal mytotalAmount = myNewOrder.totalAmount;
-		//System.debug('total amount:' + mytotalAmount);
+		System.debug('total amount:' + mytotalAmount);
 
         Test.startTest();
         
@@ -32,7 +32,7 @@ public class testUpdateAccountTurnover {
 
         Decimal newAccountTurnover =  [SELECT Id,Chiffre_d_affaire__c FROM Account ].Chiffre_d_affaire__c;
 
-        //System.debug('newCA :' + newAccountTurnover + ' , ' + 'calcul :' +( accountTurnover + myTotalAmount));
+        System.debug('newCA :' + newAccountTurnover + ' , ' + 'calcul :' +( accountTurnover + myTotalAmount));
         System.assertEquals(newAccountTurnover, accountTurnover + myTotalAmount,'pas bien');
 
     }
