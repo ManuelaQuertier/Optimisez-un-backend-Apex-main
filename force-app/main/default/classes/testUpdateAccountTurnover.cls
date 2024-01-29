@@ -4,7 +4,6 @@ public class testUpdateAccountTurnover {
     @testSetup 
     static void testDatas(){
         
-        User myUser = TestDataFactory.createUser();
         Id accountId = TestDataFactory.createAccount();
         
         Id contractId = TestDataFactory.createContract(accountId);
@@ -19,22 +18,22 @@ public class testUpdateAccountTurnover {
 	static void testUpdateAccountTurnoverOrderedStatus(){
 		        
         Decimal accountTurnover = [SELECT Id,Chiffre_d_affaire__c FROM Account].Chiffre_d_affaire__c;
+		System.debug('oldCA :' + accountTurnover);
         Order myNewOrder = [SELECT Id,totalAmount from Order LIMIT 1];
        	Decimal mytotalAmount = myNewOrder.totalAmount;
+		System.debug('total amount:' + mytotalAmount);
 
         Test.startTest();
         
             myNewOrder.Status = 'Ordered';
 		    update myNewOrder;
-
-            //System.debug('total amount:' + mytotalAmount);
         
         Test.stopTest();
 
         Decimal newAccountTurnover =  [SELECT Id,Chiffre_d_affaire__c FROM Account ].Chiffre_d_affaire__c;
 
+        System.debug('newCA :' + newAccountTurnover + ' , ' + 'calcul :' +( accountTurnover + myTotalAmount));
         System.assertEquals(newAccountTurnover, accountTurnover + myTotalAmount,'pas bien');
-        //System.debug(newAccountTurnover + ' , ' + ( accountTurnover + myTotalAmount));
 
     }
 
@@ -48,7 +47,6 @@ public class testUpdateAccountTurnover {
          
             myNewOrder.Status = 'Activated';
 		    update myNewOrder;
-            //System.debug('total amount:' + mytotalAmount);
          
         Test.stopTest();
 
