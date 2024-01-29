@@ -1,35 +1,48 @@
-
 @isTest
 public class testMyTeamOrdersController {
 
     @testSetup 
     static void testDatas(){
 
+		Id accountId = TestDataFactory.createAccount();
+        
+        Id contractId = TestDataFactory.createContract(accountId);
+        Contract newContract = [SELECT Id, status FROM Contract];
+        newContract.status= 'Activated';
+        update newContract;
+        
+		TestDataFactory.createOrderWithItems(accountId, 10);
     }
 
     @isTest
     static void testSumOrders() {
 
-        List<Order> allOrders = [SELECT Id, Status FROM Order ];
+        List<Order> someOrders = [SELECT Id, Status FROM Order LIMIT 5];
 
         List<Order> ordersToUpdate = new List<Order>();
 
-        test.startTest();
-        for(Order order : allOrders){
+        for(Order order : someOrders){
             order.Status = 'Ordered';
             ordersToUpdate.add(order);
         }
         update ordersToUpdate;
-        /*
+       
+        Test.startTest();
         MyTeamOrdersController instance = new MyTeamOrdersController();
         Decimal sumOfTotalAmount = instance.SumOrders;
         System.debug(sumOfTotalAmount);
-        test.stopTest();
-        //call SumOrder Method
-        //get total amount 
-        //sum totals amount
+      	Test.stopTest();
+		
+        AggregateResult allOrdersgroupedResults = [SELECT SUM(TotalAmount) total FROM Order];
+		Decimal sumOfAllTotalAmount = (Decimal)allOrdersgroupedResults.get('total');
+		system.debug((Decimal)allOrdersgroupedResults.get('total'));
 
-        //System.assertEquals(groupResults,sumOfTotalAmount);
-        */
+        AggregateResult notOrderedOrdersgroupedResults = [SELECT SUM(TotalAmount) total FROM Order WHERE Status != 'Ordered'];
+		Decimal sumOfAllnotOrdered = (Decimal)notOrderedOrdersgroupedResults.get('total');
+		system.debug((Decimal)notOrderedOrdersgroupedResults.get('total'));
+
+		System.debug('ordered :' + sumOfTotalAmount + ' - ' + 'Calcul:' + (sumOfAllTotalAmount - sumOfAllnotOrdered));
+        System.assertEquals(sumOfTotalAmount,(sumOfAllTotalAmount - sumOfAllnotOrdered));
+        
     }
 }
