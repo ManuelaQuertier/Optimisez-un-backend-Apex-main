@@ -2,7 +2,8 @@ public with sharing class UpdateAccountService {
     
     public void UpdateAccounts(List<Account> scope) {
 
-        List<Order> ordersOrdered = [SELECT Id, AccountId, TotalAmount From Order WHERE AccountId IN :scope];
+        List<Order> ordersOrdered = [SELECT Id, AccountId, TotalAmount From Order WHERE Status = 'Ordered' AND AccountId IN :scope];
+        System.debug(ordersOrdered);
         Map<Id, Decimal> mapAccountTotalAmount = new Map<Id,Decimal>();
 
         for (Order order : ordersOrdered){
