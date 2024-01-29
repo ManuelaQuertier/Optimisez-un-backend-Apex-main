@@ -28,20 +28,20 @@ public class testMyTeamOrdersController {
         update ordersToUpdate;
        
         Test.startTest();
-        MyTeamOrdersController instance = new MyTeamOrdersController();
-        Decimal sumOfTotalAmount = instance.SumOrders;
-        System.debug(sumOfTotalAmount);
+            MyTeamOrdersController instance = new MyTeamOrdersController();
+            Decimal sumOfTotalAmount = instance.SumOrders;
+            //System.debug(sumOfTotalAmount);
       	Test.stopTest();
 		
         AggregateResult allOrdersgroupedResults = [SELECT SUM(TotalAmount) total FROM Order];
 		Decimal sumOfAllTotalAmount = (Decimal)allOrdersgroupedResults.get('total');
-		system.debug((Decimal)allOrdersgroupedResults.get('total'));
+		//system.debug((Decimal)allOrdersgroupedResults.get('total'));
 
         AggregateResult notOrderedOrdersgroupedResults = [SELECT SUM(TotalAmount) total FROM Order WHERE Status != 'Ordered'];
 		Decimal sumOfAllnotOrdered = (Decimal)notOrderedOrdersgroupedResults.get('total');
-		system.debug((Decimal)notOrderedOrdersgroupedResults.get('total'));
+		//system.debug((Decimal)notOrderedOrdersgroupedResults.get('total'));
 
-		System.debug('ordered :' + sumOfTotalAmount + ' - ' + 'Calcul:' + (sumOfAllTotalAmount - sumOfAllnotOrdered));
+		//System.debug('ordered :' + sumOfTotalAmount + ' - ' + 'Calcul:' + (sumOfAllTotalAmount - sumOfAllnotOrdered));
         System.assertEquals(sumOfTotalAmount,(sumOfAllTotalAmount - sumOfAllnotOrdered));
         
     }
