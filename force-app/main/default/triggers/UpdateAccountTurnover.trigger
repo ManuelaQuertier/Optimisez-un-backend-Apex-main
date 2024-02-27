@@ -4,9 +4,15 @@ trigger UpdateAccountTurnover on Order (after update) {
         if(Trigger.isUpdate){
             UpdateAccountTurnoverTriggerHandler instance = new UpdateAccountTurnoverTriggerHandler();
 
-            List<Order> triggerOrders = Trigger.new;
+            List<Order> ordersOrdered = new List<Order>();
 
-            instance.UpdateAccountTurnover(triggerOrders);
+            for (Order triggerOrders : trigger.new){
+                if (triggerOrders.status != trigger.oldMap.get(triggerOrders.Id).status && triggerOrders.status == 'Ordered'){
+                    ordersOrdered.add(triggerOrders);
+                }
+            }
+            
+            instance.UpdateAccountTurnover(ordersOrdered);
         }
     }
     

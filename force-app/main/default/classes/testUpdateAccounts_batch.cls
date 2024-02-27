@@ -1,8 +1,25 @@
 @isTest
 public class testUpdateAccounts_batch {
 
-   @isTest(SeeAllData=true)
+	@TestSetup
+	static void testDatas(){
+        
+        Id accountId = TestDataFactory.createAccount();
+        
+        Id contractId = TestDataFactory.createContract(accountId);
+        Contract newContract = [SELECT Id, status FROM Contract];
+        newContract.status= 'Activated';
+        update newContract;
+        
+		TestDataFactory.createOrderWithItems(accountId, 1);
+    }
+
+   @isTest
    static void testAccountTurnoverUpdateWithNewPrices() {
+
+		Order myOrder = [Select Id, Status FROM Order];
+		myOrder.status= 'Ordered';
+		update myOrder;
 
         OrderItem myTestOrderItem = [Select Id, UnitPrice, Order.Id, Order.AccountId from orderItem where Order.status = 'Ordered' LIMIT 1];
 			//System.debug(myTestOrderItem);
@@ -22,7 +39,7 @@ public class testUpdateAccounts_batch {
 		AggregateResult aggregateTotalAmount = [SELECT SUM(TotalAmount) total FROM Order WHERE Status = 'Ordered' AND AccountId = :accountId];
 		Decimal sumOfTotalAmount = (Decimal)aggregateTotalAmount.get('total');
 
-		Decimal newAccountTurnover = [SELECT Id, Chiffre_d_affaire__c from Account where Id = :accountId ]?.Chiffre_d_affaire__c;
+		Decimal newAccountTurnover = [SELECT Id, Chiffre_d_affaire__c from Account where Id = :accountId ].Chiffre_d_affaire__c;
        		//System.debug('newCA' + newAccountTurnover);
 
        System.assertEquals(newAccountTurnover, sumOfTotalAmount, 'problem with the batch');
