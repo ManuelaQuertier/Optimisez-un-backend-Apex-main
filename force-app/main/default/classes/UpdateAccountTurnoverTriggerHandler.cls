@@ -1,8 +1,7 @@
 public with sharing class UpdateAccountTurnoverTriggerHandler {
 
-    public void UpdateAccountTurnover() {
+    public void UpdateAccountTurnover( List<Order> triggerOrders) {
         
-        List<Order> triggerOrders = Trigger.new;
         set<Id> setAccountIds = new set<Id>();
         Map<Id, Decimal> mapAccountTotalAmount = new Map<Id,Decimal>();
 

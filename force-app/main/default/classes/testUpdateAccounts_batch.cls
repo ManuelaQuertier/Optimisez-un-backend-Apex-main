@@ -22,9 +22,23 @@ public class testUpdateAccounts_batch {
 		AggregateResult aggregateTotalAmount = [SELECT SUM(TotalAmount) total FROM Order WHERE Status = 'Ordered' AND AccountId = :accountId];
 		Decimal sumOfTotalAmount = (Decimal)aggregateTotalAmount.get('total');
 
-		Decimal newAccountTurnover = [SELECT Id, Chiffre_d_affaire__c from Account where Id = :accountId ].Chiffre_d_affaire__c;
+		Decimal newAccountTurnover = [SELECT Id, Chiffre_d_affaire__c from Account where Id = :accountId ]?.Chiffre_d_affaire__c;
        		//System.debug('newCA' + newAccountTurnover);
 
        System.assertEquals(newAccountTurnover, sumOfTotalAmount, 'problem with the batch');
     }
+
+	@isTest 
+	static void testSchedulerMethod(){
+
+		String timeToSchedule = '0 0 0 28 2 ? 2024';
+
+		Test.startTest();
+		String jodId = System.schedule('ExecuteBatchTest', timeToSchedule, new UpdateAccounts_batch());
+		Test.stopTest();
+
+		List<AsyncApexJob> jobsScheduled = [select Id, ApexClassID, ApexClass.Name, Status, JobType from AsyncApexJob where JobType = 'ScheduledApex'];
+		System.assertEquals(1, jobsScheduled.size(), 'expecting one apex batch job');
+
+	}
 }

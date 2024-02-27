@@ -1,6 +1,13 @@
 trigger UpdateAccountTurnover on Order (after update) {
 	
-    UpdateAccountTurnoverTriggerHandler instance = new UpdateAccountTurnoverTriggerHandler();
+    if (Trigger.isAfter){
+        if(Trigger.isUpdate){
+            UpdateAccountTurnoverTriggerHandler instance = new UpdateAccountTurnoverTriggerHandler();
+
+            List<Order> triggerOrders = Trigger.new;
+
+            instance.UpdateAccountTurnover(triggerOrders);
+        }
+    }
     
-        instance.UpdateAccountTurnover();
 }

@@ -11,7 +11,7 @@ public class testUpdateAccountTurnover {
         newContract.status= 'Activated';
         update newContract;
         
-		TestDataFactory.createOrderWithItems(accountId, 100);
+		TestDataFactory.createOrderWithItems(accountId, 200);
     }
 
    @isTest
