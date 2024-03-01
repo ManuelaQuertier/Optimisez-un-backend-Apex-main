@@ -1,19 +1,12 @@
-trigger UpdateAccountTurnover on Order (after update) {
-	
-    if (Trigger.isAfter){
-        if(Trigger.isUpdate){
-            UpdateAccountTurnoverTriggerHandler instance = new UpdateAccountTurnoverTriggerHandler();
+trigger UpdateAccountTurnover on Order(after update) {
 
-            List<Order> ordersOrdered = new List<Order>();
+    if (Trigger.isAfter && Trigger.isUpdate) {
 
-            for (Order triggerOrders : trigger.new){
-                if (triggerOrders.status != trigger.oldMap.get(triggerOrders.Id).status && triggerOrders.status == 'Ordered'){
-                    ordersOrdered.add(triggerOrders);
-                }
-            }
-            
-            instance.UpdateAccountTurnover(ordersOrdered);
-        }
+      UpdateAccountTurnoverTriggerHandler instance = new UpdateAccountTurnoverTriggerHandler();
+
+      List<Order> ordersUpdated = trigger.new;
+      Map<Id,Order> oldOrdersMap = trigger.oldMap;
+
+      instance.UpdateAccountTurnover(ordersUpdated,oldOrdersMap);
     }
-    
 }

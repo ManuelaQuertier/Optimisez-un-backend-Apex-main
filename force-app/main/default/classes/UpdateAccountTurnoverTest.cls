@@ -1,6 +1,8 @@
-@isTest public class UpdateAccountTurnoverTest {
+@isTest 
+public class UpdateAccountTurnoverTest {
 
-  @testSetup static void testDatas() {
+  @testSetup 
+  static void testDatas() {
 
     Id accountId = TestDataFactory.createAccount();
 
@@ -12,47 +14,41 @@
     TestDataFactory.createOrderWithItems(accountId, 200);
   }
 
-  @isTest static void testUpdateAccountTurnoverOrderedStatus() {
+  @isTest 
+  static void testUpdateAccountTurnoverOrderedStatus() {
 
     Decimal accountTurnover =
-        [ SELECT Id, Chiffre_d_affaire__c FROM Account ].Chiffre_d_affaire__c;
-    // System.debug('oldCA :' + accountTurnover);
+        [ SELECT Id, Chiffre_d_affaire__c FROM Account ]?.Chiffre_d_affaire__c;
+    
     Order myNewOrder = [ SELECT Id, totalAmount from Order LIMIT 1 ];
     Decimal mytotalAmount = myNewOrder.totalAmount;
-    // System.debug('total amount:' + mytotalAmount);
 
     Test.startTest();
-
     myNewOrder.Status = 'Ordered';
     update myNewOrder;
-
     Test.stopTest();
 
     Decimal newAccountTurnover =
-        [ SELECT Id, Chiffre_d_affaire__c FROM Account ].Chiffre_d_affaire__c;
+        [ SELECT Id, Chiffre_d_affaire__c FROM Account ]?.Chiffre_d_affaire__c;
 
-    // System.debug('newCA :' + newAccountTurnover + ' , ' + 'calcul :' +(
-    // accountTurnover + myTotalAmount));
-    System.assertEquals(newAccountTurnover, accountTurnover + myTotalAmount);
+    System.assertEquals(newAccountTurnover, accountTurnover + myTotalAmount, 'The new Account Turnover is not correct');
   }
 
-  @isTest static void testUpdateAccountTurnoverOtherStatus() {
+  @isTest 
+  static void testUpdateAccountTurnoverOtherStatus() {
 
     Decimal accountTurnover =
-        [ SELECT Id, Chiffre_d_affaire__c FROM Account ].Chiffre_d_affaire__c;
+        [ SELECT Id, Chiffre_d_affaire__c FROM Account ]?.Chiffre_d_affaire__c;
     Order myNewOrder = [ SELECT Id, totalAmount from order LIMIT 1 ];
 
     Test.startTest();
-
     myNewOrder.Status = 'Activated';
     update myNewOrder;
-
     Test.stopTest();
 
     Decimal newAccountTurnover =
-        [ SELECT Id, Chiffre_d_affaire__c FROM Account ].Chiffre_d_affaire__c;
+        [ SELECT Id, Chiffre_d_affaire__c FROM Account ]?.Chiffre_d_affaire__c;
 
-    // System.debug(newAccountTurnover + ' , ' + accountTurnover);
-    System.assertEquals(newAccountTurnover, accountTurnover);
+    System.assertEquals(newAccountTurnover, accountTurnover, 'The Account Turnover should not have changed');
   }
 }

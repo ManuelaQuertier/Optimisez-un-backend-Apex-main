@@ -2,8 +2,7 @@ global class UpdateAccounts_Batch implements Database.Batchable<sObject>,
     Schedulable {
 
   global Database.QueryLocator start(Database.BatchableContext info) {
-    // Requeter seulement les comptes qui ont au moins une commande avec le
-    // Status 'Ordered'
+    // Requeter seulement les comptes qui ont au moins une commande avec le Status 'Ordered'
     return Database.getQueryLocator(
         'Select Id FROM Account WHERE Id IN(SELECT AccountId FROM Order WHERE Status  = \'Ordered\')');
   }
