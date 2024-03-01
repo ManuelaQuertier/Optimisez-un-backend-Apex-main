@@ -17,6 +17,7 @@ public class MyTeamOrdersControllerTest {
   @isTest 
   static void testSumOrders() {
 
+    //change status to ordered for the alf of the orders created
     List<Order> someOrders = [ SELECT Id, Status FROM Order LIMIT 5 ];
 
     List<Order> ordersToUpdate = new List<Order>();

@@ -17,6 +17,7 @@ public class UpdateAccounts_BatchTest {
   @isTest 
   static void testAccountTurnoverUpdateWithNewPrices() {
 
+    //select order and its order Item to update the price
     Order myOrder = [ Select Id, Status FROM Order ];
     myOrder.status = 'Ordered';
     update myOrder;
