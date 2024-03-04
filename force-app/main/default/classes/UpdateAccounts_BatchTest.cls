@@ -53,7 +53,7 @@ public class UpdateAccounts_BatchTest {
   @isTest 
   static void testSchedulerMethod() {
 
-    String timeToSchedule = '0 0 0 28 2 ? 2024';
+    String timeToSchedule = '0 0 0 28 2 ? 2024'; //pas bon à cause de la date
 
     Test.startTest();
     String jodId = System.schedule('ExecuteBatchTest', timeToSchedule, new UpdateAccounts_Batch());

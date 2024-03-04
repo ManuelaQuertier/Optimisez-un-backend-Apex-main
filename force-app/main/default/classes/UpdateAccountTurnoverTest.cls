@@ -7,10 +7,8 @@ public class UpdateAccountTurnoverTest {
     Id accountId = TestDataFactory.createAccount();
 
     Id contractId = TestDataFactory.createContract(accountId);
-    Contract newContract = [ SELECT Id, status FROM Contract ];
-    newContract.status = 'Activated';
-    update newContract;
-
+    update new Contract(Id= contractId, status = 'Activated');
+ 
     TestDataFactory.createOrderWithItems(accountId, 200);
   }
 
